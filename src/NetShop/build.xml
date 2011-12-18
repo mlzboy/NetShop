@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- name:对应工程的名字；default:需要的缺省任务(运行"ant"不指明任务时执行的任务) -->
+<project name="NetShop" default="dist" basedir=".">
+	<property file="tomcat.properties" />
+	<property name="appName" value="NetShop" />
+	<property name="src.dir" value="src" />
+	<property name="dist.dir" value="dist" />
+	<property name="webapps.dir" value="C:\Program Files\Apache Software Foundation\Tomcat 5.5\webapps\NetShop" />
+	<property name="webroot.dir" value="WebRoot" />
+	<property name="lib.dir" value="${webroot.dir}/WEB-INF/lib" />
+	<property name="classes.dir" value="${webroot.dir}/WEB-INF/classes" />
+	<property name="config.dir" value="${webroot.dir}/WEB-INF" />
+	<property name="appserver.home" value="C:\Program Files\Apache Software Foundation\Tomcat 5.5" />
+
+	<!-- Compilation Classpath 路径设置 -->
+	<path id="compile.classpath">
+		<pathelement location="${classes.dir}" />
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${appserver.home}\common\lib" includes="servlet*.jar" />
+	</path>
+
+	<!-- Clean Target 删除先前的目录结构 -->
+	<target name="clean" description="Delete old build and dist directories">
+		<delete dir="${classes.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${webapps.dir}" />
+	</target>
+
+	<!-- Prepare Target 建立打包的目的目录结构 -->
+	<target name="prepare">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!-- Compile Target 编译代码，在这之前先由prepare建立目录结构 -->
+	<target name="compile" depends="prepare" description="Compile java sources">
+		<!-- Compile java class as necessary -->
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" encoding="UTF-8">
+			<classpath refid="compile.classpath" />
+		</javac>
+
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Deploy Target 在tomcat下建立应用目录并部署应用 -->
+	<target name="deploy" depends="compile" description="Deploy application to servlet container">
+		<!-- Copy the contents of the build directory -->
+		<mkdir dir="${webapps.dir}" />
+		<copy todir="${webapps.dir}">
+			<fileset dir="${webroot.dir}" />
+		</copy>
+
+		<mkdir dir="${webapps.dir}/WEB-INF/classes" />
+		<copy todir="${webapps.dir}/WEB-INF/classes">
+			<fileset dir="${classes.dir}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${webapps.dir}/WEB-INF/lib" />
+		<copy todir="${webapps.dir}/WEB-INF/lib">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+
+		<copy todir="${webapps.dir}/WEB-INF/">
+			<fileset dir="${config.dir}" />
+		</copy>
+	</target>
+
+	<!-- Dist Target 将应用打包成war，在这之前先执行javadoc和deploy -->
+	<target name="dist" depends="clean,deploy" description="Create binary destribution">
+		<jar jarfile="${dist.dir}/ROOT.war" basedir="${webapps.dir}" />
+	</target>
+
+	<!-- Javadoc Target 生成javadoc -->
+	<target name="javadoc" depends="compile" description="Create Javadoc API documentation">
+		<mkdir dir="${dist.dir}/docs/api" />
+		<javadoc sourcepath="${src.dir}" destdir="${dist.dir}/docs/api" packagenames="com.lexus.*" />
+	</target>
+
+	<!-- ============================================================== -->
+	<!-- Tomcat tasks - remove these if you don't have Tomcat installed -->
+	<!-- ============================================================== -->
+
+<taskdef name="install" classname="org.apache.catalina.ant.InstallTask">
+		<classpath>
+			<path location="${appserver.home}/server/lib/catalina-ant.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
+		<classpath>
+			<path location="${appserver.home}/server/lib/catalina-ant.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef name="list" classname="org.apache.catalina.ant.ListTask">
+		<classpath>
+			<path location="${appserver.home}/server/lib/catalina-ant.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+		<classpath>
+			<path location="${appserver.home}/server/lib/catalina-ant.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+		<classpath>
+			<path location="${appserver.home}/server/lib/catalina-ant.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="install" description="Install application in Tomcat">
+		<install url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${appName}" war="${name}" />
+	</target>
+
+	<target name="reload" description="Reload application in Tomcat">
+		<reload url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${appName}" />
+	</target>
+
+	<target name="start" description="Start Tomcat application">
+		<start url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${appName}" />
+	</target>
+	<target name="stop" description="Stop Tomcat application">
+		<stop url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${appName}" />
+	</target>
+	<target name="list" description="List Tomcat applications">
+		<list url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" />
+	</target>
+	<!-- End Tomcat tasks -->
+</project>

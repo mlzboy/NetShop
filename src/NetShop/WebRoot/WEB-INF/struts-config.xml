@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+	<data-sources />
+	<!-- Form Beans -->
+	<form-beans>
+		<form-bean name="loginForm"
+			type="com.lexus.struts.form.LoginForm" />
+		<form-bean name="userAddForm"
+			type="com.lexus.struts.form.UserAddForm" />
+		<form-bean name="logoutForm"
+			type="com.lexus.struts.form.LogoutForm" />
+		<form-bean name="userListForm"
+			type="com.lexus.struts.form.UserListForm" />
+		<form-bean name="userModForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="username" type="java.lang.String" />
+			<form-property name="password" type="java.lang.String" />
+			<form-property name="newpassword" type="java.lang.String" />
+			<form-property name="newpassword2" type="java.lang.String" />
+		</form-bean>
+    <form-bean name="dictionaryForm" type="org.apache.struts.validator.DynaValidatorActionForm">
+      <form-property name="dictionaryName" type="java.lang.String" />
+      <form-property name="isMultinest" type="java.lang.String" />
+    </form-bean>
+    <form-bean name="dictionaryListForm" type="org.apache.struts.validator.DynaValidatorForm" />
+    <form-bean name="categoryForm" type="org.apache.struts.validator.DynaValidatorActionForm">
+      <form-property name="parentCategoryName" type="java.lang.String" />
+      <form-property name="categoryStatus" type="java.lang.String" />
+      <form-property name="parentCategoryId" type="java.lang.String" />
+      <form-property name="categoryDescription" type="java.lang.String" />
+      <form-property name="categoryName" type="java.lang.String" />
+      <form-property name="dictionaryId" type="java.lang.String" />
+    </form-bean>
+    <form-bean name="categoryDetailForm" type="org.apache.struts.validator.DynaValidatorForm">
+      <form-property name="description" type="java.lang.String" />
+      <form-property name="categoryName" type="java.lang.String" />
+      <form-property name="status" type="java.lang.String" />
+      <form-property name="id" type="java.lang.String" />
+    </form-bean>
+    <form-bean name="dictionaryDetailForm" type="org.apache.struts.validator.DynaValidatorForm">
+      <form-property name="dictionaryName" type="java.lang.String" />
+      <form-property name="isMultinest" type="java.lang.String" />
+      <form-property name="dictionaryStatus" type="java.lang.String" />
+      <form-property name="id" type="java.lang.String" />
+    </form-bean>
+    <form-bean name="productAddForm" type="com.lexus.struts.form.ProductAddForm" />
+    <form-bean name="productListForm" type="com.lexus.struts.form.ProductListForm" />
+    <form-bean name="productEditForm" type="com.lexus.struts.form.ProductEditForm" />
+	</form-beans>
+
+	<global-exceptions />
+	<!-- Global Forwards -->
+	<global-forwards>
+		<forward name="mainPage" path="/manage/main.jsp"
+			redirect="true" />
+		<forward name="errorPage" path="/manage/error.jsp"
+			redirect="true" />
+		<forward name="loginPage" path="/manage/login.jsp"
+			redirect="true" />
+		<forward name="userListPage" path="/manage/userList.jsp"
+			redirect="true" />
+		<forward name="userListDoPage" path="/manage/userList.do"
+			redirect="true" />
+    <forward
+      name="userModPage"
+      path="/manage/userMod.jsp"
+      redirect="true" />
+    <forward name="dictionaryAddPage" path="/manage/dictionaryAdd.jsp" />
+    <forward name="dictionaryListPage" path="/manage/dictionaryList.jsp" />
+    <forward name="buildDictionariesPage" path="/manage/buildDictionaries.jsp" />
+    <forward name="categoryDetailPage" path="/manage/categoryDetail.jsp" />
+    <forward name="dictionaryDetailPage" path="/manage/dictionaryDetail.jsp" />
+    <forward name="showInfoPage" path="/manage/showInfo.jsp" />
+    <forward name="productListPage" path="/manage/productList.jsp" />
+    <forward name="productEditPage" path="/manage/productEdit.jsp" />
+    <forward name="productSearchResultPage" path="/manage/productSearchResult.jsp" />
+    <forward name="productListPageShow" path="/manage/productList.do?act=list" />
+    <forward name="manufactureListPage" path="/manufactureList.jsp" />
+	</global-forwards>
+	<!-- Action Mappings -->
+	<!-- 使用Valiator框架时,默认validate="true",可以不显示声明 -->
+	<action-mappings>
+		<action attribute="loginForm" input="/manage/login.jsp"
+			name="loginForm" path="/manage/login" scope="request"
+			type="com.lexus.struts.action.LoginAction">
+			<forward name="successPage" path="/manage/main.jsp"
+				redirect="true" />
+		</action>
+		<action attribute="userAddForm" input="/manage/userAdd.jsp"
+			name="userAddForm" path="/manage/userAdd" scope="request"
+			type="com.lexus.struts.action.UserAddAction" />
+		<action attribute="logoutForm" input="/manage/logout.jsp"
+			name="logoutForm" path="/manage/logout" scope="request"
+			type="com.lexus.struts.action.LogoutAction" />
+		<action attribute="userListForm" input="/manage/userList.jsp"
+			name="userListForm" path="/manage/userList" scope="request"
+			type="com.lexus.struts.action.UserListAction" />
+		<action
+      attribute="userModForm"
+      input="/manage/userMod.jsp"
+      name="userModForm"
+      path="/manage/userMod"
+      scope="request"
+      type="com.lexus.struts.action.UserModAction" />
+    <action
+      attribute="dictionaryForm"
+      input="/manage/dictionaryAdd.jsp"
+      name="dictionaryForm"
+      path="/manage/dictionary"
+      scope="request"
+      type="com.lexus.struts.action.DictionaryAction" />
+    <action
+      attribute="dictionaryListForm"
+      input="/form/dictionaryList.jsp"
+      name="dictionaryListForm"
+      parameter="act"
+      path="/manage/dictionaryList"
+      scope="request"
+      type="com.lexus.struts.action.DictionaryListAction"
+      validate="false" />
+    <action
+      attribute="categoryForm"
+      input="/manage/categoryAdd.jsp"
+      name="categoryForm"
+      path="/manage/categoryAdd"
+      scope="request"
+      type="com.lexus.struts.action.CategoryAction" />
+    <action
+      attribute="categoryForm"
+      input="/manage/buildDictionaries.jsp"
+      name="categoryForm"
+      path="/manage/buildDictionaries"
+      scope="request"
+      type="com.lexus.struts.action.CategoryAction"
+      validate="false" />
+    <action path="/manage/categoryList" type="com.lexus.struts.action.CategoryListAction" validate="false"/>
+    <action
+      attribute="categoryDetailForm"
+      input="/manage/categoryDetail.jsp"
+      name="categoryDetailForm"
+      path="/manage/categoryDetail"
+      scope="request"
+      type="com.lexus.struts.action.CategoryDetailAction" />
+    <action
+      attribute="dictionaryDetailForm"
+      input="/manage/dictionaryDetail.jsp"
+      name="dictionaryDetailForm"
+      path="/manage/dictionaryDetail"
+      scope="request"
+      type="com.lexus.struts.action.DictionaryDetailAction" />
+    <action
+      attribute="productAddForm"
+      input="/manage/productAdd.jsp"
+      name="productAddForm"
+      path="/manage/productAdd"
+      scope="request"
+      type="com.lexus.struts.action.ProductAddAction" />
+    <action
+      attribute="productListForm"
+      input="/manage/productList.jsp"
+      name="productListForm"
+      path="/manage/productList"
+      scope="request"
+      type="com.lexus.struts.action.ProductListAction" />
+    <action
+      attribute="productEditForm"
+      input="/manage/productEdit.jsp"
+      name="productEditForm"
+      path="/manage/productEdit"
+      scope="request"
+      type="com.lexus.struts.action.ProductEditAction" />
+    <action path="/manage/treeList" type="com.lexus.struts.action.TreeListAction" />
+    <action path="/manage/dictionaryList2" type="com.lexus.struts.action.DictionaryList2Action" />
+    <action path="/manufactureList" type="com.lexus.struts.action.ManufactureListAction" />
+
+	</action-mappings>
+
+	<!-- Message Resources -->
+	<message-resources
+		parameter="com.lexus.struts.ApplicationResources" />
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+	</plug-in>
+	<!--  
+		<plug-in
+		className="org.springframework.web.struts.ContextLoaderPlugIn">
+		<set-property property="contextConfigLocation"
+		value="/WEB-INF/classes/applicationContext.xml" />
+		</plug-in>
+	-->
+</struts-config>
+

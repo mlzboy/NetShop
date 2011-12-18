@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/shop?useUnicode=true&amp;characterEncoding=UTF-8</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>zhoubt</value>
+		</property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="show_sql">true</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/lexus/bean/User.hbm.xml</value>
+				<value>com/lexus/bean/UserDetail.hbm.xml</value>
+				<value>com/lexus/bean/Log.hbm.xml</value>
+				<value>com/lexus/bean/Attachment.hbm.xml</value>
+				<value>com/lexus/bean/Dictionary.hbm.xml</value>
+				<value>com/lexus/bean/DictionaryLib.hbm.xml</value>
+				<value>com/lexus/bean/FieldName.hbm.xml</value>
+				<value>com/lexus/bean/Product.hbm.xml</value>
+				<value>com/lexus/bean/ProductDetail.hbm.xml</value>
+				<value>
+					com/lexus/bean/TableFieldDictMapping.hbm.xml
+				</value>
+				<value>com/lexus/bean/TableName.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="userDAO" class="com.lexus.dao.impl.UserDAO"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userDetailDAO" class="com.lexus.dao.impl.UserDetailDAO"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="logDAO" class="com.lexus.dao.impl.LogDAO" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userTarget" class="com.lexus.service.impl.UserServiceImpl"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="userDAO">
+			<ref local="userDAO" />
+		</property>
+	</bean>
+	<bean id="logTarget" class="com.lexus.service.impl.LogServiceImpl"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="logDAO">
+			<ref local="logDAO" />
+		</property>
+	</bean>
+	<bean id="userDetailTarget"
+		class="com.lexus.service.impl.UserDetailServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="userDetailDAO">
+			<ref local="userDetailDAO" />
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="userTarget"></ref>
+		</property>
+	</bean>
+	<bean id="userDetailService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="userDetailTarget" />
+		</property>
+	</bean>
+	<bean id="logService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="logTarget" />
+		</property>
+	</bean>
+	<!-- 通过AOP的方式，将事务处理分配到目标DAO的每一个方法中去-->
+	<bean id="txProxyTemplate"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager">
+			<ref local="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="dictionaryLibDAO"
+		class="com.lexus.dao.impl.DictionaryLibDAO" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="dictionaryDAO" class="com.lexus.dao.impl.DictionaryDAO"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="tableNameDAO" class="com.lexus.dao.impl.TableNameDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="fieldNameDAO" class="com.lexus.dao.impl.FieldNameDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="tableFieldDictMappingDAO"
+		class="com.lexus.dao.impl.TableFieldDictMappingDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="attachmentDAO" class="com.lexus.dao.impl.AttachmentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="productDAO" class="com.lexus.dao.impl.ProductDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="productDetailDAO"
+		class="com.lexus.dao.impl.ProductDetailDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="tableNameService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="tableNameTarget" />
+		</property>
+	</bean>
+	<bean id="tableNameTarget"
+		class="com.lexus.service.impl.TableNameServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="tableNameDAO">
+			<ref local="tableNameDAO" />
+		</property>
+	</bean>
+	<bean id="dictionaryTarget"
+		class="com.lexus.service.impl.DictionaryServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="dictionaryDAO">
+			<ref local="dictionaryDAO" />
+		</property>
+	</bean>
+	<bean id="tableFieldDictMappingTarget"
+		class="com.lexus.service.impl.TableFieldDictMappingServiceImpl"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="tableFieldDictMappingDAO">
+			<ref local="tableFieldDictMappingDAO" />
+		</property>
+	</bean>
+	<bean id="productDetailTarget"
+		class="com.lexus.service.impl.ProductDetailServiceImpl"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="productDetailDAO">
+			<ref local="productDetailDAO" />
+		</property>
+	</bean>
+	<bean id="fieldNameTarget"
+		class="com.lexus.service.impl.FieldNameServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="fieldNameDAO">
+			<ref local="fieldNameDAO" />
+		</property>
+	</bean>
+	<bean id="attachmentTarget"
+		class="com.lexus.service.impl.AttachmentServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="attachmentDAO">
+			<ref local="attachmentDAO" />
+		</property>
+	</bean>
+	<bean id="productTarget"
+		class="com.lexus.service.impl.ProductServiceImpl" abstract="false"
+		singleton="true" lazy-init="default" autowire="default"
+		dependency-check="default">
+		<property name="productDAO">
+			<ref local="productDAO" />
+		</property>
+		<property name="dictionaryLibDAO">
+			<ref local="dictionaryLibDAO" />
+		</property>
+	</bean>
+	<bean id="fieldNameService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="fieldNameTarget" />
+		</property>
+	</bean>
+	<bean id="tableFieldDictMappingService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="tableFieldDictMappingTarget" />
+		</property>
+	</bean>
+	<bean id="productDetailSerice"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="productDetailTarget" />
+		</property>
+	</bean>
+	<bean id="dictionaryService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="dictionaryTarget" />
+		</property>
+	</bean>
+	<bean id="attachmentService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="attachmentTarget" />
+		</property>
+	</bean>
+	<bean id="productService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="productTarget" />
+		</property>
+	</bean>
+	<bean id="dictionaryLibService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		parent="txProxyTemplate" abstract="false" singleton="true"
+		lazy-init="default" autowire="default" dependency-check="default">
+		<property name="target">
+			<ref local="dictionaryLibTarget" />
+		</property>
+	</bean>
+	<bean id="dictionaryLibTarget"
+		class="com.lexus.service.impl.DictionaryLibServiceImpl"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="dictionaryLibDAO">
+			<ref local="dictionaryLibDAO" />
+		</property>
+	</bean>
+	<!--
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="mappings">
+			<props>
+				<prop key="manage/categoryAdd.do">CategoryAction</prop>
+			</props>
+		</property>
+		<property name="interceptors">
+			<list>
+				<ref bean="openSessionInViewInterceptor" />
+			</list>
+		</property>
+	</bean>
+	<bean name="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor"
+		abstract="false" singleton="true" lazy-init="default"
+		autowire="default" dependency-check="default">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory"></ref>
+		</property>
+	</bean>
+	-->
+</beans>

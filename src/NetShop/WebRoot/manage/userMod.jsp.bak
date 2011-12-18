@@ -1,0 +1,19 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean"%> 
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
+ 
+<html> 
+	<head>
+		<title><bean:message key="message.ui.manage.usermod.title"/></title>
+	</head>
+	<body>
+		<form  method="post" action="/NetShop/manage/userMod.do">
+			<bean:message key="message.ui.manage.usermod.username"/> <html:text property="username" disabled="true"/><html:errors property="username"/><br/>
+			<bean:message key="message.ui.manage.usermod.password"/> <html:password property="password"/><html:errors property="password"/><br/>
+			<bean:message key="message.ui.manage.usermod.password2"/> <html:password property="password2"/><html:errors property="password2"/><br/>
+			<html:submit><bean:message key="message.ui.manage.usermod.submit"/></html:submit><html:cancel><bean:message key="message.ui.manage.usermod.cancle"/></html:cancel>
+			<html:errors property="info"/>
+		</form>
+	</body>
+</html>
+

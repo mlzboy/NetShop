@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<tree text="">
+<tree text="bbb" id="19" onaction="insertValue(this)"/>
+<tree text="ccc" id="11" onaction="insertValue(this)" src="category14.xml"/>
+</tree>

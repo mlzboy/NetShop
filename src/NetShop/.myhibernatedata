@@ -1,0 +1,20 @@
+#
+#Sat May 05 18:05:13 CST 2007
+genBasicCompId=false
+sessionFactoryName=
+profile=
+daoSFId=sessionFactory
+version=3.0
+jndiPath=
+springDaoFile=src/applicationContext.xml
+useJavaTypes=true
+keyGenerator=foreign
+libInstallFolder=/WebRoot/WEB-INF/lib
+addLibs2Project=true
+genVersionTag=false
+sessionFactoryId=sessionFactory
+basePersistenceClass=
+reSettingsFile=
+configFile=/NetShop/src/applicationContext.xml
+createConfigFile=false
+addLibs2Classpath=true

@@ -1,0 +1,79 @@
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+<form-validation>
+<formset>
+<form name="loginForm">
+<field property="username" depends="required,maxlength">
+<msg name="required" key="error.ui.manage.login.username.required"></msg>
+<msg name="maxlength" key="error.ui.manage.login.username.maxlength"></msg>
+<arg0 key="message.ui.manage.login.username"></arg0>
+<arg1 name="maxlength" key="${var:maxlength}" resource="false"></arg1>
+<var>
+<var-name>maxlength</var-name>
+<var-value>25</var-value>
+</var>
+</field>
+<field property="password" depends="required">
+<arg0 key="message.ui.manage.login.password"></arg0>
+</field>
+</form>
+<form name="userAddForm">
+<field property="username" depends="required,maxlength">
+<msg name="required" key="error.ui.manage.useradd.username.required"></msg>
+<msg name="maxlength" key="error.ui.manage.useradd.username.maxlength"></msg>
+<arg0 key="message.ui.manage.useradd.username"></arg0>
+<arg1 name="maxlength" key="${var:maxlength}" resource="false"/>
+<var>
+<var-name>maxlength</var-name>
+<var-value>25</var-value>
+</var>
+</field>
+<field property="password" depends="minlength,maxlength,required">
+<msg name="minlength" key="error.ui.manage.useradd.password.minlength"></msg>
+<msg name="maxlength" key="error.ui.manage.useradd.password.maxlength"></msg>
+<msg name="required" key="error.ui.manage.useradd.password.required"></msg>
+<arg0 key="message.ui.manage.useradd.password"/>
+<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+<arg2 name="maxlength" key="${var:maxlength}" resource="false"/>
+<var>
+<var-name>minlength</var-name>
+<var-value>6</var-value>
+</var>
+<var>
+<var-name>maxlength</var-name>
+<var-value>20</var-value>
+</var>
+</field>
+</form>
+<form name="userModForm">
+<field property="newpassword" depends="minlength,maxlength,required">
+<msg name="minlength" key="error.ui.manage.useradd.password.minlength"></msg>
+<msg name="maxlength" key="error.ui.manage.useradd.password.maxlength"></msg>
+<msg name="required" key="error.ui.manage.useradd.password.required"></msg>
+<arg0 key="message.ui.manage.useradd.password"/>
+<arg1 name="minlength" key="${var:minlength}" resource="false"/>
+<arg2 name="maxlength" key="${var:maxlength}" resource="false"/>
+<var>
+<var-name>minlength</var-name>
+<var-value>6</var-value>
+</var>
+<var>
+<var-name>maxlength</var-name>
+<var-value>20</var-value>
+</var>
+</field>
+</form>
+<form name="/manage/dictionary">
+<field property="dictionaryName" depends="required">
+<msg name="required" key="error.ui.manage.dictionaryadd.dictionaryname.required"></msg>
+<arg0 key="message.ui.manage.dictionaryadd.dictionaryname"/>
+</field>
+</form>
+<form name="categroyDetailForm">
+<field property="categoryName" depends="required">
+<arg0 key="categoryName" resource="false"></arg0>
+</field>
+</form>
+</formset>
+</form-validation>

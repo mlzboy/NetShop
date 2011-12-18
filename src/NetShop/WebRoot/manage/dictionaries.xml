@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tree text="">
+	<tree text="产品分类字典" id="0,1" onaction="insertValue(this)" tooltip="产品字典" src="none.xml"/>
+	<tree text="计算机分类字典" id="0,2" onaction="insertValue(this)" tooltip="计算机分类字典" src="computer.xml"/>
+</tree>
